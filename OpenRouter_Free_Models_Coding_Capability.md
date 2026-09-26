@@ -1,8 +1,8 @@
 # OpenRouter Free Models: Coding Capability & Health Evaluation
 
-**Generated**: September 25, 2026  
-**Scope**: Models in VS Code Copilot Chat (`Other Models -> Free OpenRouter`)  
-**Total Evaluated Models**: 21  
+**Generated**: September 26, 2026
+**Scope**: Models in VS Code Copilot Chat (`Other Models -> Free OpenRouter`)
+**Total Evaluated Models**: 21
 
 ---
 
@@ -34,7 +34,7 @@ This document provides a technical evaluation of the active free models availabl
 | **A** | **Poolside: Laguna XS 2.1 (free)** | 🟢 | 262K | 3B / 33B (MoE) | Yes | Yes | **Low-Latency Coding**: Fast, interactive inline editing and terminal commands. |
 | **B** | Dots Studio: Dots3-Note Preview (free) | 🟢 | 512K | 16B / 280B (MoE) | Yes | Yes | **Architecture Notes & Specs**: Technical design documents, API specs, and schemas. |
 | **B** | Google: Gemma 4 26B A4B  (free) | 🟢 | 262K | 3.8B / 25.2B (MoE) | Yes | Yes | **Fast Assistant**: Lightweight MoE delivering near-31B quality at higher token throughput. |
-| **B** | NVIDIA: Nemotron 3 Super (free) | 🟡 | 262K | 12B / 120B (Hybrid MoE) | Yes | Configurable | **Backend & Scripting**: Hybrid Mamba architecture for structured outputs. |
+| **B** | NVIDIA: Nemotron 3 Super (free) | 🟢 | 262K | 12B / 120B (Hybrid MoE) | Yes | Configurable | **Backend & Scripting**: Hybrid Mamba architecture for structured outputs. |
 | **B** | Qwen: Qwen3.8 27B (free) | 🟢 | 262K | N/A | Yes | Yes | Qwen3.8 27B is an open-weight dense vision-language model from Qwen. It is suite |
 | **B** | Space Bunny Alpha | 🟢 | 1.00M | N/A | Yes | Yes | Space Bunny Alpha is an anonymous large model with blazing-fast inference, stron |
 | **B** | Thinking Machines: Inkling Small (free) | 🟢 | 1.05M | 12B / 276B (MoE) | Yes | Configurable | **Fast Code Review**: High context window for repository audits and PR reviews. |
@@ -93,24 +93,25 @@ Telemetry pulled directly from OpenRouter endpoint monitoring:
 
 | Model | Upstream Provider | Status | 5m Uptime | 24h Uptime | Latency (TTFT) | 30m Demand |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Cohere: North Mini Code (free)** | Cohere | 🟢 **Online** | 98.6% | 97.71% | Fast | Dynamic |
-| **Poolside: Laguna S 2.1 (free)** | Poolside | 🟢 **Online** | 100.0% | 99.87% | Fast | Dynamic |
-| **Thinking Machines: Inkling (free)** | Thinking Machines | 🟢 **Online** | 98.8% | 99.62% | Fast | Dynamic |
-| **Google: Gemma 4 31B (free)** | Google AI Studio | 🟢 **Online** | 100% | 99.53% | Fast | Dynamic |
-| **NVIDIA: Nemotron 3 Ultra (free)** | Nvidia | 🟢 **Online** | 99.2% | 98.61% | Fast | Dynamic |
-| **Poolside: Laguna XS 2.1 (free)** | Poolside | 🟢 **Online** | 100.0% | 99.77% | Fast | Dynamic |
-| **Dots Studio: Dots3-Note Preview (free)** | AtlasCloud | 🟢 **Online** | 100.0% | 99.92% | Fast | Dynamic |
-| **Google: Gemma 4 26B A4B  (free)** | Google AI Studio | 🟢 **Online** | 100% | 99.66% | Fast | Dynamic |
-| **NVIDIA: Nemotron 3 Super (free)** | Nvidia | 🟡 Degraded (-2) | 88.8% | 96.31% | Fast | Dynamic |
-| **Qwen: Qwen3.8 27B (free)** | ModelRun | 🟢 **Online** | 100.0% | 97.37% | Fast | Dynamic |
-| **Space Bunny Alpha** | Stealth | 🟢 **Online** | 100.0% | 99.97% | Fast | Dynamic |
+| **Cohere: North Mini Code (free)** | Cohere | 🟢 **Online** | 97.6% | 97.84% | Fast | Dynamic |
+| **Poolside: Laguna S 2.1 (free)** | Poolside | 🟢 **Online** | 99.8% | 99.88% | Fast | Dynamic |
+| **Thinking Machines: Inkling (free)** | Thinking Machines | 🟢 **Online** | 99.8% | 99.49% | Fast | Dynamic |
+| **Google: Gemma 4 31B (free)** | Google AI Studio | 🟢 **Online** | 100.0% | 99.59% | Fast | Dynamic |
+| **NVIDIA: Nemotron 3 Ultra (free)** | Nvidia | 🟢 **Online** | 99.0% | 98.40% | Fast | Dynamic |
+| **Poolside: Laguna XS 2.1 (free)** | Poolside | 🟢 **Online** | 99.7% | 99.75% | Fast | Dynamic |
+| **Dots Studio: Dots3-Note Preview (free)** | AtlasCloud | 🟢 **Online** | 99.8% | 99.91% | Fast | Dynamic |
+| **Google: Gemma 4 26B A4B  (free)** | Google AI Studio | 🟢 **Online** | 100.0% | 99.69% | Fast | Dynamic |
+| **NVIDIA: Nemotron 3 Super (free)** | Nvidia | 🟢 **Online** | 98.6% | 95.86% | Fast | Dynamic |
+| **Qwen: Qwen3.8 27B (free)** | ModelRun | 🟢 **Online** | 100.0% | 97.63% | Fast | Dynamic |
+| **Space Bunny Alpha** | Stealth | 🟢 **Online** | 100.0% | 99.91% | Fast | Dynamic |
 | **Thinking Machines: Inkling Small (free)** | Thinking Machines | 🟢 **Online** | 100.0% | 99.96% | Fast | Dynamic |
 | **Free Models Router** | OpenRouter Gateway | 🟢 **Online** | 100% | 100% | Dynamic | High |
-| **NVIDIA: Nemotron 3 Nano Omni (free)** | Nvidia | 🟡 Degraded (-2) | 90.5% | 80.60% | Fast | Dynamic |
-| **NVIDIA: Nemotron 3.5 Lightning (free)** | Nvidia | 🟡 Degraded (-2) | 93.0% | 89.11% | Fast | Dynamic |
-| **Google: Lyria 3 Clip Preview** | Google AI Studio | 🟢 **Online** | 100% | 99.10% | Fast | Dynamic |
-| **Google: Lyria 3 Pro Preview** | Google AI Studio | 🟢 **Online** | 100% | 99.91% | Fast | Dynamic |
+| **NVIDIA: Nemotron 3 Nano Omni (free)** | Nvidia | 🟡 Degraded (-5) | 76.1% | 80.81% | Fast | Dynamic |
+| **NVIDIA: Nemotron 3.5 Lightning (free)** | Nvidia | 🟡 Degraded (-2) | 90.6% | 87.10% | Fast | Dynamic |
+| **Google: Lyria 3 Clip Preview** | Google AI Studio | 🟢 **Online** | 100% | 100.00% | Fast | Dynamic |
+| **Google: Lyria 3 Pro Preview** | Google AI Studio | 🟢 **Online** | 100% | 99.94% | Fast | Dynamic |
 | **inclusionAI: Ling 3.0 Flash Fin (free)** | Novita | 🟢 **Online** | 100.0% | 99.99% | Fast | Dynamic |
 | **inclusionAI: Ling 3.0 Flash Sante (free)** | Novita | 🟢 **Online** | 100.0% | 100.00% | Fast | Dynamic |
-| **LiquidAI: LFM2.5-2.6B (free)** | Liquid | 🟢 **Online** | 100.0% | 99.77% | Fast | Dynamic |
-| **NVIDIA: Nemotron 3.5 Content Safety (free)** | Nvidia | 🟢 **Online** | 98.3% | 97.25% | Fast | Dynamic |
+| **LiquidAI: LFM2.5-2.6B (free)** | Liquid | 🟢 **Online** | 100.0% | 99.39% | Fast | Dynamic |
+| **NVIDIA: Nemotron 3.5 Content Safety (free)** | Nvidia | 🟢 **Online** | 99.1% | 97.34% | Fast | Dynamic |
+
