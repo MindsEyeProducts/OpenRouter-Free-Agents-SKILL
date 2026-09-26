@@ -1,3 +1,11 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+.venv/
+.cleanup-backups/
+
+# Local skill installation; the publishable package lives at repository root.
+.agents/
+
+# Local deployment staging and backups (may contain personal documentation).
+.implementation-staging/

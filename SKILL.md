@@ -1,128 +1,68 @@
 ---
 name: openrouter-free-agents
-description: "Search OpenRouter for current free AI models and update the Free OpenRouter group in the VS Code Copilot Chat Models selector. Does not populate Custom Agents in Set Agents."
+description: "Search OpenRouter for current free AI models, update the Free OpenRouter group in the VS Code Copilot Chat Models selector, and optionally preview or save a coding capability and health report. Does not populate Custom Agents in Set Agents."
 ---
 
 # Free OpenRouter Models Sync
 
-Queries the live OpenRouter API for currently available free models, updates the VS Code Copilot Chat Models selector under **Other Models -> Free OpenRouter**, and un-pins/removes any models that are no longer free. Does not create or populate Custom Agents in GitHub Copilot Set Agents.
+Use the bundled `scripts/sync_openrouter_agents.py` for model synchronization and evaluation. It queries OpenRouter, configures **Other Models -> Free OpenRouter**, pins active free models, unpins expired models, and cleans legacy `openrouter-*.agent.md` files.
 
-## When to Use
-- User wants to find or use free OpenRouter models in VS Code Copilot Chat.
-- User wants to update or refresh the **Other Models -> Free OpenRouter** group in the Models selector.
-- User wants to remove expired free models.
-- User invokes `/openrouter-free-agents` in Copilot Chat.
+## Select the requested workflow
 
-## Architecture
+Honor flags and natural-language choices supplied with `/openrouter-free-agents`. An upfront request to evaluate and save a report authorizes that complete workflow; do not ask the evaluation or Markdown Y/N questions again.
 
-This skill configures and maintains the Models selector for free OpenRouter models without cluttering GitHub Copilot Set Agents:
-1. **Language Model Provider Configuration (`chatLanguageModels.json`)**: Configures the dedicated `Free OpenRouter` custom endpoint provider group, placing active free models under **Other Models -> Free OpenRouter** in the Models selector.
-2. **Model Selector Quick Access (`chatModelPinned` in `state.vscdb`)**: Pins active free models under `customendpoint/Free OpenRouter/<model_id>` for instant access and automatically unpins expired models.
-3. **Agent Selector Cleanliness**: Deliberately does NOT create Custom Agent files (`.agent.md`), keeping GitHub Copilot's Set Agents menu (Agent / Ask / Plan) clean and unpolluted. Automatically detects and purges any legacy `openrouter-*.agent.md` files from workspace and user profile directories.
+| Request | Script arguments | Result |
+| --- | --- | --- |
+| Sync and save the evaluation | `--eval-md` | Sync once, fetch health once, save the report. |
+| Sync models | No arguments | Sync and print the active model list and changes. |
+| Preview evaluation / health only | `--evaluate` | Print the complete Markdown report; no VS Code updates, cleanup, or report file writes. |
+| List models only | `--list` | Print the model list; no changes. |
+| Preview synchronization changes | `--dry-run` | Show the planned sync without applying it. |
 
-## Availability & Scope
+`--tools-only` can be added to any workflow and must be retained in later evaluation requests for that run. `--eval-md`, `--evaluate`, and `--list` are mutually exclusive. `--dry-run --eval-md` previews synchronization and the destination without fetching health or writing a report.
 
-This skill is installed for both **local workspace** and **global cross-workspace** use:
+## Run one bundled command
 
-| Scope | Type | Location | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Global (Personal)** | Skill Definition | `~/.copilot/skills/openrouter-free-agents/`<br>`~/.agents/skills/openrouter-free-agents/`<br>`~/.claude/skills/openrouter-free-agents/` | Invokable via `/openrouter-free-agents` in any project across VS Code. |
-| **Global (Personal)** | Model Provider Group | `chatLanguageModels.json` (`Free OpenRouter` group) | Populates active free models under **Other Models -> Free OpenRouter** in the Chat Model Picker across all workspaces. |
-| **Global (Personal)** | Pinned Models | `state.vscdb` (`chatModelPinned`) | Quick access to active free models in the Models selector. |
-| **Local (Workspace)** | Skill Definition | `.agents/skills/openrouter-free-agents/` | Team/project-shared skill repository. |
+Resolve `scripts/sync_openrouter_agents.py` relative to **the SKILL.md being used**. Use that resolved path in one terminal invocation. This works for a repository checkout, `.agents/skills`, `.github/skills`, and personal skill installations without maintaining separate path-selection snippets.
 
-## Quick Execution
+For example, with the personal Copilot installation:
 
-Execute the sync script to update free models (works from any directory or workspace):
-
-### 1. Standard Sync (Local & Global)
-```powershell
-python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py"
-```
-*(If working inside this project workspace, `python -B .agents/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py` also works).*
-
-### 2. Preview changes (Dry Run)
-```powershell
-python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py" --dry-run
-```
-
-### 3. Tool-Enabled Models Only (Recommended for coding models)
-```powershell
-python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py" --tools-only
-```
-
-### 4. Inspect Free Models Only
-```powershell
-python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py" --list
-```
-
-### 5. Generate Coding Capabilities Evaluation Document
 ```powershell
 python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py" --eval-md
 ```
 
-## Procedure for Agents
+Use the current project as the working directory. If the terminal is elsewhere, pass `--workspace-dir "<absolute project path>"`; relative report filenames resolve against that project. `--eval-md "report.md"` selects a different filename.
 
-When requested to run this skill or sync free OpenRouter models:
+- Use the command's model list and sync summary. A successful sync does not need a follow-up `--list` or duplicate verification run.
+- Use `--evaluate` for an evaluation-only request. The CLI provides all endpoint queries and report formatting; do not reconstruct them with Python snippets, Pylance, or per-model terminal calls.
+- Inspect failures before retrying. Retry for a concrete error, not merely to obtain the same output through another tool.
+- Keep normal host approval controls. Do not change permission settings as part of synchronization. A skill cannot promise a fixed number of Allow prompts.
 
-1. **Run the sync script**:
-   Invoke `run_in_terminal` with:
-   ```powershell
-   if (Test-Path ".agents/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py") {
-       python -B .agents/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py
-   } else {
-       python -B "$HOME/.copilot/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py"
-   }
-   ```
-2. **Inspect script output**:
-   Review the list of models updated in the `Free OpenRouter` group, newly pinned models, retained models, unpinned models, and legacy agent files purged.
-3. **Report to User**:
-   Summarize:
-   - Free models configured in **Other Models -> Free OpenRouter**.
-   - Models pinned/retained in the Models selector.
-   - Unpinned models (models that expired or are no longer free).
-   - Confirmation that Custom Agents are NOT populated in Set Agents (and any legacy `.agent.md` files were cleaned up).
-   - How to select them in Copilot Chat: open the Models selector at the bottom of the chat panel and choose from the **Other Models -> Free OpenRouter** group.
-   - Prompt the user to reload the window to apply changes:
-     Press `Ctrl+Shift+P` (or `F1`) and run:
-     **`Developer: Reload Window`**
-   - Ask the user:
-     "Would you like a coding capability evaluation of the identified free models? (Y/N)"
-   *(Do NOT ask to create the markdown document yet; that prompt occurs only after the evaluation results are displayed).*
-4. **Evaluation & Health Check (When user responds Y)**:
-   - Perform the coding capability evaluation AND live health check across the active free models by querying OpenRouter endpoint telemetry (`/api/v1/models/{author}/{slug}/endpoints`).
-   - Present the evaluation findings to the user:
-     - Tier breakdown (S, A, B, C, N/A) with **Health status icons** (🟢 Healthy, 🟡 Degraded, 🔴 Offline) and technical specifications (Params, Context, Tools, Reasoning).
-     - Recommended models by use case (Daily Coding, Deep Architecture, Low-Latency Iteration, Multimodal UI).
-     - How to select models in VS Code Copilot Chat.
-     - Real-Time Model Health & Operational Status table placed at the bottom (Upstream Provider, Status, 5m Uptime, 24h Uptime, Latency, Demand).
-   - **Immediately following these evaluation and health check results**, prompt the user:
-     "Create MD document with this OpenRouter Free Models coding capabilities evaluation? (Y/N)"
-5. **Markdown Document Generation (When user responds Y to MD creation)**:
-   - Generate or update `OpenRouter_Free_Models_Coding_Capability.md` in the workspace root directory (with the Health column in the Tier Summary and the Real-Time Model Health table at the bottom), or execute:
-     ```powershell
-     python -B .agents/skills/openrouter-free-agents/scripts/sync_openrouter_agents.py --eval-md
-     ```
-   - Confirm to the user that `OpenRouter_Free_Models_Coding_Capability.md` has been created or updated in the workspace root.
+## Present results and finish
+
+For synchronization, summarize configured, pinned, retained, and unpinned models and legacy file cleanup from the actual output. Report errors or skipped operations accurately. Custom Agents in **Set Agents** are not created.
+
+For `--eval-md`, read the saved report with a file-reading tool, summarize its tiers, use cases, and health, and link the file. The default destination is `OpenRouter_Free_Models_Coding_Capability.md` in the current project. No further evaluation or save question is needed.
+
+For `--evaluate`, present the Markdown returned on stdout. If the user requested only a preview, honor that choice. If they have not decided whether to save, offer to save after showing the result. On approval, write the captured Markdown using the host's file-editing tool; reuse the displayed result rather than resynchronizing or fetching health again. Explain if the complete prior output is unavailable before fetching a replacement.
+
+For a bare invocation with no scope specified, perform the standard sync and offer the optional evaluation. If accepted, run `--evaluate`, show the result, and offer to save it. Skip these questions whenever the user's request already answers them.
+
+After completing the requested sync and any chosen evaluation/save steps, ask the user to run **Developer: Reload Window** with `Ctrl+Shift+P` (or `F1`). Then select a model under **Other Models -> Free OpenRouter** in Copilot Chat. Preview, list, and dry-run modes do not require a reload by themselves.
+
+The report combines live API data with maintained coding tiers and model notes. Describe it as a capability and health report, not a fresh benchmark run.
+
+## Files affected by synchronization
+
+- VS Code user `chatLanguageModels.json`: the Free OpenRouter provider group.
+- VS Code user `globalStorage/state.vscdb`: model pinning and visibility.
+- Workspace and user prompt directories: legacy `openrouter-*.agent.md` cleanup.
+- Current project report: written only when `--eval-md` or a later save is requested.
+
+`--no-db-sync` skips only database updates; provider configuration and legacy cleanup still run.
 
 ## References
-- [OpenRouter API Specification](./references/openrouter-api.md)
-- [VS Code Model Selector & Free OpenRouter Configuration Guide](./references/agent-pinning.md)
-- [OpenRouter Free Models Coding Capability Document](./OpenRouter_Free_Models_Coding_Capability.md)
-- [Sync Script Source](./scripts/sync_openrouter_agents.py)
 
----
-
-### Reload & Follow-Up Prompts
-Follow this sequential prompt flow across conversation turns:
-
-#### Phase 1: Immediately after Initial Sync
-1. Window Reload:
-   > Press `Ctrl+Shift+P` (or `F1`) and run:
-   > **`Developer: Reload Window`**
-2. Evaluation Prompt:
-   > Would you like a coding capability evaluation of the identified free models? (Y/N)
-
-#### Phase 2: Only AFTER Presenting Evaluation & Health Check Results
-3. Evaluation Markdown Document Generation Prompt:
-   > Create MD document with this OpenRouter Free Models coding capabilities evaluation? (Y/N)
+- [OpenRouter API notes](./references/openrouter-api.md)
+- [VS Code provider and model pinning](./references/agent-pinning.md)
+- [Bundled sync and evaluation script](./scripts/sync_openrouter_agents.py)

@@ -435,7 +435,7 @@ def get_health_icon(health_info):
     return "🟢"
 
 
-def generate_evaluation_markdown(free_models, output_path="OpenRouter_Free_Models_Coding_Capability.md"):
+def render_evaluation_markdown(free_models):
     """
     Generate OpenRouter_Free_Models_Coding_Capability.md with technical evaluation,
     health indicators, and categorized recommendations for coding and agentic tasks.
@@ -599,6 +599,12 @@ Telemetry pulled directly from OpenRouter endpoint monitoring:
 
 {health_content}
 """
+    return content
+
+
+def generate_evaluation_markdown(free_models, output_path="OpenRouter_Free_Models_Coding_Capability.md"):
+    """Save the same evaluation used by --evaluate to a Markdown file."""
+    content = render_evaluation_markdown(free_models)
     p = Path(output_path)
     p.write_text(content, encoding="utf-8")
     return str(p.resolve())
@@ -623,25 +629,36 @@ def main():
         default=os.getcwd(),
         help="Root path of current workspace (default: cwd).",
     )
-    parser.add_argument(
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument(
         "--eval-md",
         nargs="?",
         const="OpenRouter_Free_Models_Coding_Capability.md",
         default=None,
-        help="Generate OpenRouter_Free_Models_Coding_Capability.md with the coding capability evaluation of active free models.",
+        help="Sync models and save their coding capability and health report (optional output filename).",
+    )
+    modes.add_argument(
+        "--evaluate",
+        action="store_true",
+        help="Print an evaluation as Markdown without syncing VS Code, cleaning files, or saving a report.",
     )
     parser.add_argument(
         "--no-db-sync",
         action="store_true",
         help="Skip syncing chatModelPinned in state.vscdb.",
     )
-    parser.add_argument(
+    modes.add_argument(
         "--list",
         action="store_true",
         help="Just list all currently free OpenRouter models and exit.",
     )
 
     args = parser.parse_args()
+
+    if args.evaluate:
+        free_models = fetch_openrouter_models(tools_only=args.tools_only)
+        print(render_evaluation_markdown(free_models), end="")
+        return
 
     print("=" * 70)
     print("🔍 Fetching current free models from OpenRouter API...")
@@ -651,14 +668,14 @@ def main():
         print("   (Filtered to models with tool-calling support)")
     print("=" * 70)
 
+    print("\nFree OpenRouter Models Available:")
+    print(f"{'Model ID':<45} | {'Tools':<6} | {'Context':<8} | Name")
+    print("-" * 75)
+    for m in free_models:
+        tools = "Yes" if m["supports_tools"] else "No"
+        ctx = f"{m['context_length']:,}" if m["context_length"] else "N/A"
+        print(f"{m['id']:<45} | {tools:<6} | {ctx:<8} | {m['name']}")
     if args.list:
-        print("\nFree OpenRouter Models Available:")
-        print(f"{'Model ID':<45} | {'Tools':<6} | {'Context':<8} | Name")
-        print("-" * 75)
-        for m in free_models:
-            tools = "Yes" if m["supports_tools"] else "No"
-            ctx = f"{m['context_length']:,}" if m["context_length"] else "N/A"
-            print(f"{m['id']:<45} | {tools:<6} | {ctx:<8} | {m['name']}")
         return
 
     # 1. Sync chatLanguageModels.json provider configuration ('Free OpenRouter' group under Other Models)
@@ -722,7 +739,6 @@ def main():
         print("   In GitHub Copilot Chat, open the Models selector at the bottom to access them.")
         print("\n🔄 To refresh the Models selector, press `Ctrl+Shift+P` (or `F1`) and run:")
         print("   Developer: Reload Window")
-        print("\n❓ Would you like a coding capability evaluation of the identified free models? (Y/N)")
 
 
 if __name__ == "__main__":
