@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "openrouter-free-agents",
+  "version": "1.0.0",
+  "description": "Discover and sync free OpenRouter models into the VS Code Copilot Chat model selector, with optional coding capability and health reports.",
+  "author": {
+    "name": "MindsEyeProducts",
+    "url": "https://github.com/MindsEyeProducts"
+  },
+  "homepage": "https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL",
+  "repository": "https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL",
+  "license": "MIT",
+  "keywords": [
+    "openrouter",
+    "free-models",
+    "github-copilot",
+    "vscode",
+    "agent-skill"
+  ]
+}
