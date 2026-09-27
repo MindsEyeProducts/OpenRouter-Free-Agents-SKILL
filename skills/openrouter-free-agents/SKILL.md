@@ -1,7 +1,6 @@
 ---
 name: openrouter-free-agents
 description: "Search OpenRouter for current free AI models, update the Free OpenRouter group in the VS Code Copilot Chat Models selector, and optionally preview or save a coding capability and health report. Does not populate Custom Agents in Set Agents."
-argument-hint: "[--tools-only] [--dry-run] [--eval-md] [--evaluate] [--list]"
 ---
 
 # Free OpenRouter Models Sync
