@@ -3,13 +3,32 @@ Updated September 26, 2026.
 
 This GitHub Copilot skill manages free OpenRouter coding models in VS Code Copilot Chat. The skill scans and synchronizes available free OpenRouter models and populates the model selector with a curated list of currently free models for quick access in VS Code Copilot Chat under **Other Models → Free OpenRouter**. The skill updates the custom provider, pins active free models, unpins expired models, and removes legacy generated agent files to keep the agents menu clean.
 
-![alt text](image.png)
+![Free OpenRouter models in the Copilot Chat model selector](image.png)
 
-The OpenRouter Free Agents Skill optionally evalautes the models for health and coding capability, providing a summarized chat report and offers a durable Markdown report for future reference.
+The OpenRouter Free Agents Skill optionally evaluates the models for health and coding capability, providing a summarized chat report and offers a durable Markdown report for future reference.
 
 ## Install
 
-For GitHub Copilot, choose either installation method.
+For GitHub Copilot, choose an installation method below.
+
+### Install as a plugin
+
+In VS Code, run **Chat: Install Plugin From Source** from the Command Palette and enter:
+
+```text
+https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL
+```
+
+Or use the Copilot CLI to add the marketplace and install the plugin:
+
+```powershell
+copilot plugin marketplace add MindsEyeProducts/OpenRouter-Free-Agents-SKILL
+copilot plugin install openrouter-free-agents@mindseye-skills
+```
+
+The plugin includes the same `/openrouter-free-agents` skill described below. Complete the [prerequisites](#prerequisites), including OpenRouter setup, before running it. To update a CLI installation later, run `copilot plugin update openrouter-free-agents`.
+
+### Install as a standalone skill
 
 ### Clone with Git
 
