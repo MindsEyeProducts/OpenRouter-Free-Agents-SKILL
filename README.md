@@ -1,5 +1,5 @@
 # OpenRouter Free Agents Skill
-Updated September 26, 2026.
+Updated September 27, 2026.
 
 This GitHub Copilot skill manages free OpenRouter coding models in VS Code Copilot Chat. The skill scans and synchronizes available free OpenRouter models and populates the model selector with a curated list of currently free models for quick access in VS Code Copilot Chat under **Other Models → Free OpenRouter**. The skill updates the custom provider, pins active free models, unpins expired models, and removes legacy generated agent files to keep the agents menu clean.
 
@@ -30,19 +30,29 @@ The plugin includes the same `/openrouter-free-agents` skill described below. Co
 
 ### Install as a standalone skill
 
-### Clone with Git
+Copy only `skills/openrouter-free-agents/` into your personal skills directory. That folder contains the complete skill, script, and references and works without the rest of this repository. Install either the plugin or the standalone skill to avoid duplicate commands.
+
+#### Clone with Git
 
 ```powershell
-git clone https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL.git "$HOME/.copilot/skills/openrouter-free-agents"
+git clone https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL.git
+New-Item -ItemType Directory -Force "$HOME/.copilot/skills" | Out-Null
+Copy-Item -Recurse ./OpenRouter-Free-Agents-SKILL/skills/openrouter-free-agents "$HOME/.copilot/skills/"
 ```
 
-### Download ZIP
+#### Download ZIP
 
 1. [Download the latest ZIP](https://github.com/MindsEyeProducts/OpenRouter-Free-Agents-SKILL/archive/refs/heads/main.zip), or select **Code → Download ZIP** on GitHub.
-2. Extract the ZIP and rename the extracted `OpenRouter-Free-Agents-SKILL-main` folder to `openrouter-free-agents`.
-3. Move that folder into `%USERPROFILE%\.copilot\skills\` on Windows, creating the `skills` directory if needed.
+2. Extract the ZIP and open `OpenRouter-Free-Agents-SKILL-main/skills/`.
+3. Copy its `openrouter-free-agents` folder into `%USERPROFILE%\.copilot\skills\` on Windows, creating the destination `skills` directory if needed.
 
 The resulting file path should be `%USERPROFILE%\.copilot\skills\openrouter-free-agents\SKILL.md`, with `scripts` and `references` alongside it.
+
+#### Updating an older standalone installation
+
+Version 1.0.2 moves the skill from the repository root into `skills/openrouter-free-agents/` so plugin intake discovers it correctly. If you previously cloned the repository directly into your personal skills directory, move that old installation to a backup location outside any skills directory, then install the nested folder using the steps above. A `git pull` alone no longer leaves a root `SKILL.md` in that older installation layout. Keep a source checkout outside the personal skills directory and copy the nested skill folder when updating.
+
+Plugin users can continue using `copilot plugin update openrouter-free-agents`. The repository command `python -B scripts/sync_openrouter_agents.py` remains available as a compatibility launcher.
 
 ## Run
 
@@ -348,14 +358,32 @@ Install Git if you plan to use the **Clone with Git** installation method. The *
 
 ## Contents
 
-- [SKILL.md](./SKILL.md) — agent instructions and supported workflows
+- [skills/openrouter-free-agents/SKILL.md](./skills/openrouter-free-agents/SKILL.md) — agent instructions and supported workflows
 - [README.md](./README.md) — installation and usage walkthrough with screenshots, example results, and commands
-- [scripts/sync_openrouter_agents.py](./scripts/sync_openrouter_agents.py) — model synchronization, evaluation preview, and Markdown report generation
+- [skills/openrouter-free-agents/scripts/sync_openrouter_agents.py](./skills/openrouter-free-agents/scripts/sync_openrouter_agents.py) — model synchronization, evaluation preview, and Markdown report generation
+- [scripts/sync_openrouter_agents.py](./scripts/sync_openrouter_agents.py) — compatibility launcher for the previous repository command
 - [assets/run/](./assets/run/) — screenshots used in the usage walkthrough
-- [references/openrouter-api.md](./references/openrouter-api.md) — OpenRouter API notes
-- [references/agent-pinning.md](./references/agent-pinning.md) — VS Code provider and model pinning details
+- [skills/openrouter-free-agents/references/openrouter-api.md](./skills/openrouter-free-agents/references/openrouter-api.md) — OpenRouter API notes
+- [skills/openrouter-free-agents/references/agent-pinning.md](./skills/openrouter-free-agents/references/agent-pinning.md) — VS Code provider and model pinning details
 - [OpenRouter_Free_Models_Coding_Capability.md](./OpenRouter_Free_Models_Coding_Capability.md) — generated coding capability and health report
 - [tests/test_sync_workflows.py](./tests/test_sync_workflows.py) — checks for synchronization, preview, reporting, and dry-run behavior
+
+## Development checks
+
+Python 3 is sufficient to run the skill and its workflow tests:
+
+```powershell
+python -B -m unittest discover -s tests -v
+```
+
+For plugin packaging checks, use Node.js 24 and npm 11.11.1 or newer:
+
+```powershell
+npm ci --ignore-scripts
+npm test
+```
+
+These checks use the same Vally 0.12.0 `runLint` API as the Awesome Copilot intake. They lint a complete checkout staged under the name `submission` and a standalone copy of the skill, require exactly one discovered skill, and check marketplace version consistency. CI runs both suites on Windows and Linux. Node.js is needed only for development validation.
 
 ## Support
 

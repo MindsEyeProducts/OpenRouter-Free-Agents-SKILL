@@ -1,0 +1,11 @@
+{
+  "name": "openrouter-free-agents-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/plugin-packaging.test.mjs"
+  },
+  "devDependencies": {
+    "@microsoft/vally": "0.12.0"
+  }
+}
