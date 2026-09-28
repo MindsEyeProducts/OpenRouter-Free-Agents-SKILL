@@ -5,14 +5,18 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "sync_openrouter_agents.py"
+ROOT = Path(__file__).resolve().parents[1]
+SKILL = ROOT / "skills" / "openrouter-free-agents"
+SCRIPT = SKILL / "scripts" / "sync_openrouter_agents.py"
 spec = importlib.util.spec_from_file_location("sync_openrouter_agents", SCRIPT)
 sync = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sync)
@@ -120,6 +124,28 @@ class WorkflowTests(unittest.TestCase):
                 self.run_cli("--evaluate", "--eval-md")
         self.assertEqual(raised.exception.code, 2)
         self.fetch.assert_not_called()
+
+
+class InstallationTests(unittest.TestCase):
+    def test_standalone_copy_runs_without_repository_resources(self):
+        with tempfile.TemporaryDirectory() as temp:
+            installed = Path(temp) / "openrouter-free-agents"
+            shutil.copytree(SKILL, installed)
+            result = subprocess.run(
+                [sys.executable, "-B", str(installed / "scripts" / SCRIPT.name), "--help"],
+                cwd=temp, capture_output=True, text=True, check=True,
+            )
+            self.assertIn("--eval-md", result.stdout)
+            self.assertIn("--evaluate", result.stdout)
+
+    def test_legacy_repository_command_forwards_arguments(self):
+        with tempfile.TemporaryDirectory() as temp:
+            result = subprocess.run(
+                [sys.executable, "-B", str(ROOT / "scripts" / SCRIPT.name), "--help"],
+                cwd=temp, capture_output=True, text=True, check=True,
+            )
+            self.assertIn("--eval-md", result.stdout)
+            self.assertIn("--workspace-dir", result.stdout)
 
 
 if __name__ == "__main__":

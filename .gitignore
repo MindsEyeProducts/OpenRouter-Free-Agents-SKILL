@@ -4,8 +4,10 @@ __pycache__/
 .venv/
 .cleanup-backups/
 
-# Local skill installation; the publishable package lives at repository root.
+# Local skill installation; the publishable skill lives under skills/.
 .agents/
 
 # Local deployment staging and backups (may contain personal documentation).
 .implementation-staging/
+.work/
+node_modules/
